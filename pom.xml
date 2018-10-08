@@ -17,7 +17,7 @@
         <module>gmall-user-web</module>
     </modules>
     <packaging>pom</packaging>
-    <description>这是一个聚合工程</description>
+    <description>这是一个聚合工程..</description>
 
 
 </project>
