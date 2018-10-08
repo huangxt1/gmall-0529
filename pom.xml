@@ -10,6 +10,11 @@
     <modules>
         <module>gmall-bean</module>
         <module>gmall-common</module>
+        <module>gmall-interface</module>
+        <module>gmall-webutil</module>
+        <module>gmall-serviceutil</module>
+        <module>gmall-user-serevice</module>
+        <module>gmall-user-web</module>
     </modules>
     <packaging>pom</packaging>
     <description>这是一个聚合工程</description>
