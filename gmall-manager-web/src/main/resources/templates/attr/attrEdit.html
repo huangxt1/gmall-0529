@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="attrDlg" class="easyui-dialog" title="编辑属性" style="width:600px;height:500px;"
+     closed="true" data-options="iconCls:'icon-save',resizable:true,modal:true" buttons="#bb" >
+    <form id="attrForm">
+        <br/>
+        <label>属性名称:</label>
+        <input  id="attrName" name="attrName" class="easyui-textbox" data-options="" style="width:100px"/>
+        <input  id="attrId" name="id"  type="hidden"  />
+        <br/><br/>
+
+        <!--平台属性值的列表-->
+        <table id="attrInfoValueTable" class="easyui-datagrid" title="属性值列表">
+
+
+        </table>
+    </form>
+</div>
+
+<div id="bb">
+    <a href="#" class="easyui-linkbutton" onclick="saveAttrInfoAndValue()">保存</a>
+    <a href="#" class="easyui-linkbutton" onclick="$('#attrDlg').dialog('close')">关闭</a>
+</div>
+
+
+
+
+
+
+<script language="javascript">
+    /*<![CDATA[*/
+    //保存属性名以及他对象的属性值，使用增删改查（修改）
+    function saveAttrInfoAndValue() {
+        var attrInfoAndValue={}
+       //获取页面的值
+        //1.获取id和name的值
+        attrInfoAndValue.id= $("#attrId").val();
+        attrInfoAndValue.attrName=$("#attrName").textbox('getValue');
+        attrInfoAndValue.attrValues=$("#attrInfoValueTable").datagrid('getRows');
+        //console.log(attrInfoAndValue);
+        //页面提交json数据要交给springmvc
+        //将js对象转为json
+        var jsonStr = JSON.stringify(attrInfoAndValue);
+        console.log(jsonStr);
+        $.ajax({
+                url:'attr/updaes',
+                type:'POST',
+                contentType:'application/json',//发送信息至服务器是内容编码类型
+                data:jsonStr,//把json字符串发送出去
+                processData:false,//不默认处理数据，否则变为k/v形式
+                success:function (data) {
+                    //保存成功。关闭对话框
+                    $("#attrDlg").dialog('close');
+                    //刷新表格
+                    refreshTable();
+                    $.messager.alert("成功","恭喜你，数据保存成功")
+                },
+                error:function () {
+                  alert("服务器炸了...")
+                }
+
+
+
+        })
+    }
+
+
+
+
+//双击编辑功能
+        var editIndex = undefined;
+        function endEditing(){
+        if (editIndex == undefined){return true}
+        if ($('#attrInfoValueTable').datagrid('validateRow', editIndex)){
+        $('#attrInfoValueTable').datagrid('endEdit', editIndex);
+        editIndex = undefined;
+        return true;
+        } else {
+        return false;
+        }
+        }
+        function onClickCell(index, field){
+        if (endEditing()){
+        $('#attrInfoValueTable').datagrid('selectRow', index)
+        .datagrid('editCell', {index:index,field:field});
+        editIndex = index;
+        }
+        }
+        /*]]>*/
+        </script>
+
+</body>
+</html>
